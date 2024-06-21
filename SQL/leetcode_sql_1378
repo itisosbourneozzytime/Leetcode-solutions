@@ -1,0 +1,4 @@
+select unique_id, name
+from Employees i
+left join EmployeeUNI v
+on v.id = i.id
