@@ -1,0 +1,20 @@
+with manager as
+(
+    select e1.managerId, count(e1.id) as cnt
+    from   employee e1
+    where  e1.managerId is not null
+    group by e1.managerId
+)
+select name
+from   manager m
+join   employee e
+on     m.managerId = e.id
+where  m.cnt >= 5 ;
+
+select e.name
+from   employee e1
+join   employee e
+on     e1.managerId = e.id
+where  e1.managerId is not null
+group by e1.managerId
+having count(e1.id) >= 5
