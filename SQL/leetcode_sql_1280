@@ -1,0 +1,20 @@
+with united_data as
+(
+    select student_id, subject_name
+    from   students
+    cross join subjects
+),
+agg as
+(
+    select student_id, subject_name, count(subject_name) as attended_exams
+    from   examinations
+    group by student_id, subject_name
+)
+select u.student_id, s.student_name, u.subject_name, ifnull(a.attended_exams, 0) as attended_exams
+from united_data u
+left join agg a
+on   u.student_id = a.student_id
+and  u.subject_name = a.subject_name
+join students s
+on   s.student_id = u.student_id
+order by student_id, student_name
