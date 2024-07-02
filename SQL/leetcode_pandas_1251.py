@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 def average_selling_price(prices: pd.DataFrame, units_sold: pd.DataFrame) -> pd.DataFrame:
     df = pd.merge(prices, units_sold, on = 'product_id', how = 'left')
