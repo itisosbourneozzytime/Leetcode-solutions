@@ -1,0 +1,12 @@
+with cte as
+(
+    select customer_id, count(product_key) as cnt
+    from   customer
+    group  by customer_id
+)
+select customer_id
+from cte
+where cnt in (select count(*) from product) ;
+
+select customer_id from customer group by customer_id
+having count(distinct product_key) = (select count(*) from product) ;
