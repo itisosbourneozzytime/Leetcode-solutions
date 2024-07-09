@@ -1,0 +1,9 @@
+with cte as
+(
+    select num, count(num) as cnt_
+    from   MyNumbers
+    group  by num
+)
+select max(num) as num
+from   cte
+where cnt_ = 1
