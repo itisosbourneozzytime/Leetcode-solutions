@@ -1,0 +1,12 @@
+with cte as
+(
+    SELECT l1.num,
+        LAG(l1.num , 1) OVER (ORDER BY l1.id) as lag_num,
+        LAG(l1.num , 2) OVER (ORDER BY l1.id) as lag2_num
+    FROM   Logs l1
+)
+SELECT num as ConsecutiveNums
+FROM   cte
+WHERE  num = lag_num
+AND    num = lag2_num
+
