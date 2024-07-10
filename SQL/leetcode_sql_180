@@ -10,7 +10,7 @@ FROM   cte
 WHERE  num = lag_num
 AND    num = lag2_num;
 
-SELECT l1.num, l2.num, l3.num
+SELECT num as ConsecutiveNums
 FROM   Logs l1
 JOIN   Logs l2 ON l1.id = l2.id - 1
 JOIN   Logs l3 ON l1.id = l3.id - 2
