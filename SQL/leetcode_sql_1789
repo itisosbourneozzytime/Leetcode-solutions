@@ -1,0 +1,22 @@
+with cte as
+(
+    select employee_id, count(employee_id) as cnt
+    from   employee
+    group by employee_id
+)
+select e1.employee_id, e2.department_id
+from   cte e1
+join   employee e2
+on     e1.employee_id = e2.employee_id
+where (primary_flag = 'Y' and cnt > 1) or  ;
+
+SELECT employee_id, department_id
+FROM employee
+where primary_flag = 'Y'
+
+UNION
+
+SELECT employee_id, department_id
+FROM employee
+GROUP BY employee_id
+HAVING COUNT(employee_id) = 1
