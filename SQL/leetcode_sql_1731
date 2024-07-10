@@ -1,0 +1,7 @@
+import pandas as pd
+
+def count_employees(employees: pd.DataFrame) -> pd.DataFrame:
+    data_agg = employees.groupby('reports_to').agg(reports_count=('reports_to','count'),average_age=('age', 'mean')).reset_index()
+    result = employees.merge(data_agg,left_on='employee_id',right_on='reports_to')[['employee_id','name','reports_count','average_age']]
+    result['average_age'] = np.where(result["average_age"]%1<0.5, np.floor(result["average_age"]),np.ceil(result["average_age"]))
+    return result.sort_values('employee_id')
