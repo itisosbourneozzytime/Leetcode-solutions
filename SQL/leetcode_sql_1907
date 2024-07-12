@@ -1,0 +1,31 @@
+WITH category_tag AS
+(
+    SELECT 'Low Salary' AS category
+    UNION ALL
+    SELECT 'Average Salary'
+    UNION ALL
+    SELECT 'High Salary'
+),
+split AS
+(
+    SELECT
+        CASE
+            WHEN income < 20000 THEN 'Low Salary'
+            WHEN income <= 50000 AND income >= 20000 THEN 'Average Salary'
+            WHEN income > 50000 THEN 'High Salary'
+        END AS category,
+        COUNT(account_id) AS accounts_count
+    FROM accounts a
+    GROUP BY
+        CASE
+            WHEN income < 20000 THEN 'Low Salary'
+            WHEN income <= 50000 AND income >= 20000 THEN 'Average Salary'
+            WHEN income > 50000 THEN 'High Salary'
+        END
+)
+SELECT
+    c.category,
+    COALESCE(a.accounts_count, 0) AS accounts_count
+FROM category_tag c
+LEFT OUTER JOIN split a
+ON c.category = a.category;
