@@ -3,8 +3,8 @@ WITH seat_numbered AS (
            ROW_NUMBER() OVER (ORDER BY id DESC) AS row_num
     FROM seat
 )
-select id, case when row_num = 1 then student
-                when row_number() over(order by id) % 2 = 1
+select id, case when row_num = 1   and id % 2 = 1  then student
+                when row_number()  over(order by id) % 2 = 1
                 then lead(student) over(order by id)
-                else lag(student) over(order by id) end as student
+                else lag(student)  over(order by id) end as student
 from   seat_numbered
