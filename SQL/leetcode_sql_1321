@@ -1,0 +1,54 @@
+# solution via window function
+
+select distinct visited_on,
+sum(amount) over(order by visited_on asc range between interval 6 day preceding and current row) as amount,
+round(sum(amount) over(order by visited_on asc range between interval 6 day preceding and current row) / 7, 2) as average_amount
+from customer
+limit 4
+offset 6;
+
+# solution via select clause
+
+SELECT visited_on,
+    (
+        SELECT SUM(amount)
+        FROM Customer
+        WHERE visited_on BETWEEN DATE_SUB(c.visited_on, INTERVAL 6 DAY)
+        AND c.visited_on
+    ) AS amount,
+    ROUND(
+        (
+           SELECT SUM(amount)/7
+            FROM Customer
+            WHERE visited_on BETWEEN DATE_SUB(c.visited_on, INTERVAL 6 DAY)
+            AND c.visited_on
+        ), 2
+    ) AS average_amount
+
+FROM Customer c
+
+WHERE visited_on >= (
+    SELECT DATE_ADD(MIN(visited_on), INTERVAL 6 DAY)
+    FROM Customer )
+
+group by visited_on
+order by visited_on;
+
+# self-join soultion
+
+with cte as
+(
+SELECT  distinct t1.visited_on,
+        SUM(t1.amount) as amount,
+        ROUND(SUM(t1.amount) / count(t1.customer_id),2) as average_amount
+FROM customer t1
+JOIN customer t2
+ON t2.visited_on
+BETWEEN t1.visited_on - INTERVAL 6 DAY and t1.visited_on
+GROUP BY t2.visited_on
+ORDER BY t2.visited_on
+)
+select *
+from   cte
+limit 4 offset 0;
+
