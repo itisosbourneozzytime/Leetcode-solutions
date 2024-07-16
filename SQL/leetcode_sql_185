@@ -1,0 +1,13 @@
+with top_salaries as
+(
+    select distinct e.salary, d.name as department,
+    dense_rank() over (partition by d.name order by salary desc) as salary_rank
+    from   employee e
+    join   department d
+    on     e.departmentId = d.id
+)
+select t.department, e.name as employee, e.salary
+from   top_salaries t
+join   employee e
+on     t.salary = e.salary
+where  salary_rank < 4
