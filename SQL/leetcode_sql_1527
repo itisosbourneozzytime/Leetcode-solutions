@@ -1,0 +1,7 @@
+select patient_id, patient_name, conditions
+from   patients
+where  conditions LIKE '%DIAB1%' ;
+
+SELECT patient_id, patient_name, conditions
+FROM patients
+WHERE conditions REGEXP 'DIAB100 ?';
